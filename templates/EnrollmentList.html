@@ -1,0 +1,12 @@
+{% extends 'Base_Nav.html' %}
+
+{% block title %}
+    Enrollment List Page
+{% endblock %}
+
+{% block content %}
+    <h1>Enrollment List Page</h1>
+    {% for enrollment_item in enrollment_list %}
+        <li>{{ enrollment_item.student_id }}{{ enrollment_item.class_id }}</li>
+        {% endfor %}
+{% endblock %}

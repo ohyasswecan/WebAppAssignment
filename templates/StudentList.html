@@ -1,0 +1,12 @@
+{% extends 'Base_Nav.html' %}
+
+{% block title %}
+    Student List Page
+{% endblock %}
+
+{% block content %}
+    <h1>Student List Page</h1>
+    {% for student_item in student_list %}
+        <li>{{ student_item.student_firstname }}</li>
+        {% endfor %}
+{% endblock %}

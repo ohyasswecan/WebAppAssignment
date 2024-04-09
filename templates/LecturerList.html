@@ -1,0 +1,12 @@
+{% extends 'Base_Nav.html' %}
+
+{% block title %}
+    Lecturer List Page
+{% endblock %}
+
+{% block content %}
+    <h1>Lecturer List Page</h1>
+    {% for lecturer_item in lecturer_list %}
+        <li>{{ lecturer_item.lecturer_firstname }}</li>
+        {% endfor %}
+{% endblock %}

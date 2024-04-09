@@ -1,0 +1,12 @@
+{% extends 'Base_Nav.html' %}
+
+{% block title %}
+    Semester List Page
+{% endblock %}
+
+{% block content %}
+    <h1>Semester List Page</h1>
+    {% for semester_item in semester_list %}
+        <li>{{ semester_item.semester_name }}</li>
+        {% endfor %}
+{% endblock %}
