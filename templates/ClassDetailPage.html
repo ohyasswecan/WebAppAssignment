@@ -1,7 +1,7 @@
 {% extends 'Base_Nav.html' %}
 
 {% block title %}
-    {{ class_obj.class_id }}
+    {{ object.class_id }}
 {% endblock %}
 
 {% block content %}
@@ -9,23 +9,23 @@
     <table>
     <tr>
         <th>Class ID</th>
-        <td>{{ class_obj.class_id }}</td>
+        <td>{{ object.class_id }}</td>
     </tr>
     <tr>
         <th>Class Number</th>
-        <td>{{ class_obj.class_number }}</td>
+        <td>{{ object.class_number }}</td>
     </tr>
     <tr>
         <th>Class Semester</th>
-        <td>{{ class_obj.class_semester }}</td>
+        <td>{{ object.class_semester }}</td>
     </tr>
     <tr>
         <th>Class Course</th>
-        <td>{{ class_obj.class_course }}</td>
+        <td>{{ object.class_course }}</td>
     </tr>
     <tr>
         <th>Class Lecturer</th>
-        <td>{{ class_obj.class_lecturer }}</td>
+        <td>{{  object.class_lecturer }}</td>
     </tr>
     </table>
 {% endblock %}

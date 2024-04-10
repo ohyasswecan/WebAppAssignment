@@ -7,8 +7,10 @@
 {% block content %}
     <h1>Class List Page</h1>
     <ul>
-        {% for class_item in class_list %}
-        <li><a href="{% url 'classdetail' class_item.class_id %}">{{ class_item.class_course }}</a></li>
+        {% for class_item in object_list %}
+        <li><a href="{% url 'classdetail' class_item %}">{{ class_item.class_course }}</a></li>
+        {% empty %}
+            <li>No class enrollment yet</li>
         {% endfor %}
     </ul>
 {% endblock %}

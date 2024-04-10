@@ -2,12 +2,13 @@ from django.contrib.auth import admin
 from django.urls import path
 
 from gradebook import views
+from gradebook.views import ClassEnrollmentListView, ClassEnrollmentDetailView
 
 urlpatterns = [
     path('', views.home_views, name='home'),
     path('CourseList/', views.course_list_views, name='courselist'),
-    path('ClassList/', views.class_list_views, name='classlist'),
-    path('ClassList/ClassDetail/<int:class_id>/', views.generic_details_views, name='classdetail'),
+    path('ClassList/', ClassEnrollmentListView.as_view(), name='classlist'),
+    path('ClassList/ClassDetail/<int:pk>/', ClassEnrollmentDetailView.as_view(), name='classdetail'),
     path('SemesterList/', views.semester_list_views, name='semesterlist'),
     path('StudentList/', views.student_list_views, name='studentlist'),
     path('LecturerList/', views.lecturer_list_views, name='lecturerlist'),
