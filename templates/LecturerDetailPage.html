@@ -1,0 +1,36 @@
+{% extends 'Base_Nav.html' %}
+
+{% block title %}
+    {{ object.lecturer_firstname }}_ {{ object.lecturer_lastname }}
+{% endblock %}
+
+{% block content %}
+    <h1>Lecturer Detail Page</h1>
+    <table>
+        <tr>
+            <th>Staff ID</th>
+            <td>{{ object.staff_id }}</td>
+        </tr>
+        <tr>
+            <th>Lecturer First Name</th>
+            <td>{{ object.lecturer_firstname }}</td>
+        </tr>
+        <tr>
+            <th>Lecturer Last Name</th>
+            <td>{{ object.lecturer_lastname }}</td>
+        </tr>
+        <tr>
+            <th>Lecturer Email</th>
+            <td>{{ object.lecturer_email }}</td>
+        </tr>
+         <tr>
+            <th>Lecturer Course</th>
+            <td>{{ object.lecturer_course }}</td>
+        </tr>
+        <tr>
+            <th>Lecturer Date of Birth</th>
+            <td>{{ object.lecturer_DOB }}</td>
+        </tr>
+
+    </table>
+{% endblock %}

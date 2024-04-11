@@ -1,0 +1,23 @@
+{% extends 'Base_Nav.html' %}
+
+{% block title %}
+    {{ object.course_id }}
+{% endblock %}
+
+{% block content %}
+    <h1>Course Detail Page</h1>
+    <table>
+    <tr>
+        <th>Course ID</th>
+        <td>{{ object.course_id }}</td>
+    </tr>
+    <tr>
+        <th>Course code</th>
+        <td>{{ object.course_code }}</td>
+    </tr>
+    <tr>
+        <th>Course name</th>
+        <td>{{  object.course_name }}</td>
+    </tr>
+    </table>
+{% endblock %}

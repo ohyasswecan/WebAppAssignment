@@ -6,7 +6,11 @@
 
 {% block content %}
     <h1>Enrollment List Page</h1>
-    {% for enrollment_item in enrollment_list %}
-        <li>{{ enrollment_item.student_id }}{{ enrollment_item.class_id }}</li>
+     <ul>
+        {% for enrollment_item in object_list %}
+        <li><a href="{% url 'enrollmentdetail' enrollment_item.student_id.student_id enrollment_item.class_id.class_id %}">{{ enrollment_item.student_id.student_id }}&{{ enrollment_item.class_id.class_id }}</a></li>
+        {% empty %}
+            <li>No student enrollment yet</li>
         {% endfor %}
+    </ul>
 {% endblock %}

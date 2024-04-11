@@ -1,0 +1,31 @@
+{% extends 'Base_Nav.html' %}
+
+{% block title %}
+    {{ object.student_id }}&{{ object.class_id }}
+{% endblock %}
+
+{% block content %}
+    <h1>Student Enrollment Detail Page</h1>
+    <table>
+    <tr>
+        <th>Student ID</th>
+        <td>{{ object.student_id }}</td>
+    </tr>
+    <tr>
+        <th>Class code</th>
+        <td>{{ object.class_id }}</td>
+    </tr>
+    <tr>
+        <th>Grade Year</th>
+        <td>{{ object.grade_year }}</td>
+    </tr>
+    <tr>
+        <th>Grade Year</th>
+        <td>{{ object.enrollment_date }}</td>
+    </tr>
+    <tr>
+        <th>Grade Date</th>
+        <td>{{ object.grade_date }}</td>
+    </tr>
+    </table>
+{% endblock %}

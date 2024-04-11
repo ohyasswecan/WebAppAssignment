@@ -6,7 +6,11 @@
 
 {% block content %}
     <h1>Course List Page</h1>
-    {% for course_item in course_list %}
-        <li>{{ course_item.course_name }}</li>
+    <ul>
+        {% for course_item in object_list %}
+        <li><a href="{% url 'coursedetail' course_item.course_id %}">{{ course_item.course_code }}</a></li>
+        {% empty %}
+            <li>No course yet</li>
         {% endfor %}
+    </ul>
 {% endblock %}

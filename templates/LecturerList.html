@@ -6,7 +6,11 @@
 
 {% block content %}
     <h1>Lecturer List Page</h1>
-    {% for lecturer_item in lecturer_list %}
-        <li>{{ lecturer_item.lecturer_firstname }}</li>
+    <ul>
+        {% for lecturer_item in object_list %}
+        <li><a href="{% url 'lecturerdetail' lecturer_item.staff_id %}">{{ lecturer_item.staff_id }}</a></li>
+        {% empty %}
+            <li>No staff enlist yet</li>
         {% endfor %}
+    </ul>
 {% endblock %}

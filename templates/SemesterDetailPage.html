@@ -1,0 +1,23 @@
+{% extends 'Base_Nav.html' %}
+
+{% block title %}
+    {{ object.semester_id }}
+{% endblock %}
+
+{% block content %}
+    <h1>Semester Detail Page</h1>
+    <table>
+        <tr>
+            <th>Semester ID</th>
+            <td>{{ object.semester_id }}</td>
+        </tr>
+        <tr>
+            <th>Semester Year</th>
+            <td>{{ object.semester_year }}</td>
+        </tr>
+        <tr>
+            <th>Semester Name</th>
+            <td>{{ object.semester_name }}</td>
+        </tr>
+    </table>
+{% endblock %}

@@ -6,7 +6,11 @@
 
 {% block content %}
     <h1>Semester List Page</h1>
-    {% for semester_item in semester_list %}
-        <li>{{ semester_item.semester_name }}</li>
+    <ul>
+        {% for semester_item in object_list %}
+        <li><a href="{% url 'semesterdetail' semester_item.semester_id %}">{{ semester_item.semester_id }}</a></li>
+        {% empty %}
+            <li>No semester scheduled yet</li>
         {% endfor %}
+    </ul>
 {% endblock %}
