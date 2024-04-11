@@ -1,0 +1,12 @@
+{% extends 'Base_Nav.html' %}
+{% block title %}
+    Create {{ object_list.name }}
+{% endblock %}
+
+{% block content %}
+	<form method="POST">
+    {% csrf_token %}
+    {{ form.as_table }}
+    <button type="submit">Submit</button>
+    </form>
+{% endblock %}

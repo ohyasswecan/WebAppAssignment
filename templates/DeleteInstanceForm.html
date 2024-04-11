@@ -1,0 +1,21 @@
+{% extends 'Base_Nav.html' %}
+{% block title %}
+    Delete {{ object.name }}
+{% endblock %}
+
+{% block content %}
+	<h1>Delete {{ object}}</h1>
+    <p>Are you sure you want to delete "{{ object }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            {% for field in form.visible_fields %}
+                <tr>
+                    <th>{{ field.label }}</th>
+                    <td>{{ field.value|default_if_none:'' }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <button class="btn-danger" type="submit">Yes, delete</button>
+    </form>
+{% endblock %}

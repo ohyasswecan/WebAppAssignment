@@ -1,8 +1,9 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.views.generic import ListView, DetailView
 
+from gradebook.forms import Class_EnrollmentForm
 from gradebook.models import Class_Enrollment, Course, Semester, Student, Lecturer, Student_Enrollment
 
 
@@ -180,5 +181,32 @@ class EnrollmentDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         return context
 
+def create_class_views(request):
+    if request.method == 'POST':
+        form = Class_EnrollmentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('classlist')
+    else:
+        form = Class_EnrollmentForm()
+        return render(request, 'CreateInstanceForm.html', {'form': form,'object_list':Student_Enrollment.objects.all()})
 
+def update_class_views(request, class_id):
+    class_enrol = get_object_or_404(Class_Enrollment, pk=class_id)
+    if request.method == 'POST':
+        form = Class_EnrollmentForm(request.POST, instance=class_enrol)
+        if form.is_valid():
+            form.save()
+            return redirect('classlist')
+    else:
+        form = Class_EnrollmentForm(instance=class_enrol)
+        return render(request, 'UpdateInstanceForm.html', {'form': form,'object': class_enrol})
 
+def delete_class_views(request, class_id):
+    class_enrol = get_object_or_404(Class_Enrollment, pk=class_id)
+    if request.method == 'POST':
+        class_enrol.delete()
+        return redirect('classlist')
+    else:
+        form = Class_EnrollmentForm(instance=class_enrol)
+        return render(request, 'DeleteInstanceForm.html', {'form': form, 'object': class_enrol})
