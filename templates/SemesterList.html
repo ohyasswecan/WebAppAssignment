@@ -8,7 +8,7 @@
     <h1>Semester List Page</h1>
     <ul>
         {% for semester_item in object_list %}
-        <li><a href="{% url 'semesterdetail' semester_item.semester_id %}">{{ semester_item.semester_id }}</a></li>
+        <li><a href="{% url 'semesterdetail' semester_item.semester_id %}">{{ semester_item.semester_id }}</a> <a href="{% url 'createsemester' %}">Create</a> <a href="{% url 'updatesemester' semester_item.semester_id %}">Update</a> <a href="{% url 'deletesemester' semester_item.semester_id %}">Delete</a></li>
         {% empty %}
             <li>No semester scheduled yet</li>
         {% endfor %}

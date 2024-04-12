@@ -19,7 +19,7 @@ class Student(models.Model):
     def __str__(self):
         return f'{self.student_firstname} {self.student_lastname}'
 class Semester(models.Model):
-    semester_id = models.IntegerField(primary_key=True, verbose_name="Semester ID")
+    semester_id = models.AutoField(primary_key=True, verbose_name="Semester ID")
 
     semester_year = models.PositiveIntegerField(
         validators=[MinValueValidator(1900), MaxValueValidator(2100)],
@@ -31,7 +31,7 @@ class Semester(models.Model):
     def __str__(self):
         return self.semester_name
 class Lecturer(models.Model):
-    staff_id = models.IntegerField(primary_key=True, verbose_name="Staff ID")
+    staff_id = models.AutoField(primary_key=True, verbose_name="Staff ID")
     lecturer_firstname = models.CharField(max_length=255, verbose_name="First Name")
     lecturer_lastname = models.CharField(max_length=255, verbose_name="Last Name")
     lecturer_email = models.EmailField(verbose_name="Email")

@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.views.generic import ListView, DetailView
 
-from gradebook.forms import Class_EnrollmentForm
+from gradebook.forms import Class_EnrollmentForm, CourseForm, SemesterForm
 from gradebook.models import Class_Enrollment, Course, Semester, Student, Lecturer, Student_Enrollment
 
 
@@ -210,3 +210,65 @@ def delete_class_views(request, class_id):
     else:
         form = Class_EnrollmentForm(instance=class_enrol)
         return render(request, 'DeleteInstanceForm.html', {'form': form, 'object': class_enrol})
+
+def create_course_views(request):
+    if request.method == 'POST':
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('courselist')
+    else:
+        form = CourseForm()
+        return render(request, 'CreateInstanceForm.html', {'form': form,'object_list':Course.objects.all()})
+
+def update_course_views(request, course_id):
+    course = get_object_or_404(Course, pk=course_id)
+    if request.method == 'POST':
+        form = CourseForm(request.POST, instance=course)
+        if form.is_valid():
+            form.save()
+            return redirect('courselist')
+    else:
+        form = CourseForm(instance=course)
+        return render(request, 'UpdateInstanceForm.html', {'form': form, 'object': course})
+
+def delete_course_views(request, course_id):
+    course = get_object_or_404(Course, pk=course_id)
+    if request.method == 'POST':
+        course.delete()
+        return redirect('courselist')
+    else:
+        form = Class_EnrollmentForm(instance=course)
+        return render(request, 'DeleteInstanceForm.html', {'form': form, 'object': course})
+
+
+def create_semester_views(request):
+    if request.method == 'POST':
+        form = SemesterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('semesterlist')
+    else:
+        form = SemesterForm()
+        return render(request, 'CreateInstanceForm.html', {'form': form,'object_list':Semester.objects.all()})
+
+
+def update_semester_views(request, semester_id):
+    semester = get_object_or_404(Semester, pk=semester_id)
+    if request.method == 'POST':
+        form = SemesterForm(request.POST, instance=semester)
+        if form.is_valid():
+            form.save()
+            return redirect('semesterlist')
+    else:
+        form = SemesterForm(instance=semester)
+        return render(request, 'UpdateInstanceForm.html', {'form': form, 'object': semester})
+
+def delete_semester_views(request, semester_id):
+    semester = get_object_or_404(Semester, pk=semester_id)
+    if request.method == 'POST':
+        semester.delete()
+        return redirect('semesterlist')
+    else:
+        form = SemesterForm(instance=semester)
+        return render(request, 'DeleteInstanceForm.html', {'form': form, 'object': semester})
