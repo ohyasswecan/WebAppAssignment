@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.views.generic import ListView, DetailView
 
-from gradebook.forms import Class_EnrollmentForm, CourseForm, SemesterForm
+from gradebook.forms import Class_EnrollmentForm, CourseForm, SemesterForm, StudentForm
 from gradebook.models import Class_Enrollment, Course, Semester, Student, Lecturer, Student_Enrollment
 
 
@@ -272,3 +272,35 @@ def delete_semester_views(request, semester_id):
     else:
         form = SemesterForm(instance=semester)
         return render(request, 'DeleteInstanceForm.html', {'form': form, 'object': semester})
+
+
+def create_student_views(request):
+    if request.method == 'POST':
+        form = StudentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('studentlist')
+    else:
+        form = StudentForm()
+        return render(request, 'CreateInstanceForm.html', {'form': form,'object_list':Student.objects.all()})
+
+
+def update_student_views(request, student_id):
+    student = get_object_or_404(Student, pk=student_id)
+    if request.method == 'POST':
+        form = StudentForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            return redirect('studentlist')
+    else:
+        form = StudentForm(instance=student)
+        return render(request, 'UpdateInstanceForm.html', {'form': form, 'object': student})
+
+def delete_student_views(request, student_id):
+    student = get_object_or_404(Student, pk=student_id)
+    if request.method == 'POST':
+        student.delete()
+        return redirect('studentlist')
+    else:
+        form = StudentForm(instance=student)
+        return render(request, 'DeleteInstanceForm.html', {'form': form, 'object': student})

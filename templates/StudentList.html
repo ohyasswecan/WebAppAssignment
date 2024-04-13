@@ -8,7 +8,7 @@
     <h1>Student List Page</h1>
     <ul>
         {% for student_item in object_list %}
-        <li><a href="{% url 'studentdetail' student_item.student_id %}">{{ student_item.student_id }}</a></li>
+        <li><a href="{% url 'studentdetail' student_item.student_id %}">{{ student_item.student_id }}</a> <a href="{% url 'createstudent' %}">Create</a> <a href="{% url 'updatestudent' student_item.student_id %}">Update</a> <a href="{% url 'deletestudent' student_item.student_id %}">Delete</a></li>
         {% empty %}
             <li>No student enrolled yet</li>
         {% endfor %}
