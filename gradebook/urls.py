@@ -29,7 +29,13 @@ urlpatterns = [
     path('StudentList/StudentDetail/DeleteStudent/<int:student_id>', views.delete_student_views, name='deletestudent'),
     path('StudentList/StudentDetail/<int:pk>', StudentDetailView.as_view(), name='studentdetail'),
     path('LecturerList/', LecturerListView.as_view(), name='lecturerlist'),
+    path('LecturerList/CreateLecturer/', views.create_lecturer_views, name='createlecturer'),
+    path('LecturerList/LecturerDetail/UpdateLecturer/<int:staff_id>', views.update_lecturer_views, name='updatelecturer'),
+    path('LecturerList/LecturerDetail/DeleteLecturer/<int:staff_id>', views.delete_lecturer_views, name='deletelecturer'),
     path('LecturerList/LecturerDetail/<int:pk>/', LecturerDetailView.as_view(), name='lecturerdetail'),
     path('EnrollmentList/', EnrollmentListView.as_view(), name='enrollmentlist'),
+    path('EnrollmentList/CreateEnrollment/', views.create_studentenrollment_views, name='createstudentenrollment'),
+    path('EnrollmentList/EnrollmentDetail/UpdateEnrollment/<int:student_id>/<int:class_id>/', views.update_studentenrollment_views, name='updatestudentenrollment'),
+    path('EnrollmentList/EnrollmentDetail/DeleteEnrollment/<int:student_id>/<int:class_id>/', views.delete_studentenrollment_views, name='deletestudentenrollment'),
     path('EnrollmentList/EnrollmentDetail/<int:student_id>/<int:class_id>/', EnrollmentDetailView.as_view(), name='enrollmentdetail')
 ]

@@ -8,7 +8,7 @@
     <h1>Lecturer List Page</h1>
     <ul>
         {% for lecturer_item in object_list %}
-        <li><a href="{% url 'lecturerdetail' lecturer_item.staff_id %}">{{ lecturer_item.staff_id }}</a></li>
+        <li><a href="{% url 'lecturerdetail' lecturer_item.staff_id %}">{{ lecturer_item.staff_id }}</a> <a href="{% url 'createlecturer' %}">Create</a> <a href="{% url 'updatelecturer' lecturer_item.staff_id %}">Update</a> <a href="{% url 'deletelecturer' lecturer_item.staff_id %}">Delete</a></li>
         {% empty %}
             <li>No staff enlist yet</li>
         {% endfor %}
