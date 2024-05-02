@@ -17,8 +17,7 @@ def base_reflex(request):
 
 
 def home_views(request):
-    template = loader.get_template('home.html')
-    return HttpResponse(template.render())
+    return render(request, 'home.html')
 #template view version code
 # def class_list_views(request):
 #     class_list = Class_Enrollment.objects.all()
@@ -378,3 +377,4 @@ def register(request):
     else:
         form = RegisterForm()
     return render(request, 'registration/Register.html', {'form': form})
+

@@ -8,8 +8,7 @@
     <form method="post">
         {% csrf_token %}
         {{ error }}
-        <input type="text" name="username" placeholder="Username"><br>
-        <input type="password" name="password" placeholder="Passwrod"><br>
+        {{ form.as_p }}
         <button type="submit">Login</button>
     </form>
 {% endblock %}

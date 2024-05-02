@@ -30,13 +30,16 @@
         <li class="nav-item">
             <a class="nav-link link-light" href="{% url 'enrollmentlist' %}">ENROLLMENT</a>
         </li>
-        {%  if user.is_authenticated %}
-            <li class="nav-item">
-                <a class="nav-link link-light" href="{% url 'logout' %}">LOGOUT</a>
-            </li>
-              <li>
+        {% if user.is_authenticated %}
+            <li>
                 <b>{{ user.username }}</b>
-              </li>
+            </li>
+            <li class="nav-item">
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Logout</button>
+                </form>
+            </li>
         {% else %}
             <li class="nav-item">
                 <a class="nav-link link-light" href="{% url 'login' %}">LOGIN</a>

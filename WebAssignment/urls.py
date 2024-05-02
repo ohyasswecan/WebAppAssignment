@@ -23,9 +23,9 @@ from gradebook import views
 
 urlpatterns = [
     path('', include('gradebook.urls')),
-    path('account/login', LoginView.as_view(template_name='registration/Login.html'), name='login'),
-    path('account/logout', LogoutView.as_view(),name ='logout'),
-    path('account/register', views.register, name='register'),
+    path('account/login/', LoginView.as_view(template_name='registration/Login.html'), name='login'),
+    path('account/logout/', LogoutView.as_view(next_page='/'), name='logout'),  # Redirect to home page after logout
+    path('account/register/', views.register, name='register'),
     path('account/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
 ]
