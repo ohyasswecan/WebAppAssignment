@@ -35,7 +35,6 @@ class Lecturer(models.Model):
     lecturer_firstname = models.CharField(max_length=255, verbose_name="First Name")
     lecturer_lastname = models.CharField(max_length=255, verbose_name="Last Name")
     lecturer_email = models.EmailField(verbose_name="Email")
-    lecturer_course = models.ForeignKey('Course', on_delete=models.CASCADE, verbose_name="Course")
     lecturer_DOB = models.DateField(verbose_name="Date of Birth")
 
     def __str__(self):

@@ -30,9 +30,21 @@
         <li class="nav-item">
             <a class="nav-link link-light" href="{% url 'enrollmentlist' %}">ENROLLMENT</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link link-light" href="">LOGIN</a>
-        </li>
+        {%  if user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link link-light" href="{% url 'logout' %}">LOGOUT</a>
+            </li>
+              <li>
+                <b>{{ user.username }}</b>
+              </li>
+        {% else %}
+            <li class="nav-item">
+                <a class="nav-link link-light" href="{% url 'login' %}">LOGIN</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link link-light" href="{% url 'register' %}">REGISTER</a>
+            </li>
+        {% endif %}
     </ul>
 
     {% block content %}

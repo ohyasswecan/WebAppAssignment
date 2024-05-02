@@ -37,5 +37,5 @@ urlpatterns = [
     path('EnrollmentList/CreateEnrollment/', views.create_studentenrollment_views, name='createstudentenrollment'),
     path('EnrollmentList/EnrollmentDetail/UpdateEnrollment/<int:student_id>/<int:class_id>/', views.update_studentenrollment_views, name='updatestudentenrollment'),
     path('EnrollmentList/EnrollmentDetail/DeleteEnrollment/<int:student_id>/<int:class_id>/', views.delete_studentenrollment_views, name='deletestudentenrollment'),
-    path('EnrollmentList/EnrollmentDetail/<int:student_id>/<int:class_id>/', EnrollmentDetailView.as_view(), name='enrollmentdetail')
+    path('EnrollmentList/EnrollmentDetail/<int:student_id>/<int:class_id>/', EnrollmentDetailView.as_view(), name='enrollmentdetail'),
 ]
