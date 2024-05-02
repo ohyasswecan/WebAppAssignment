@@ -1,20 +1,23 @@
 {
-  "framework": null,
+  "version": 2,
   "builds": [
     {
       "src": "WebAssignment/wsgi.py",
       "use": "@vercel/python",
-      "config": { "maxLambdaSize":  "15mb", "runtime":  "python3.9" }
+      "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
+    },
+    {
+      "src": "build_files.sh",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "staticfiles"
+      }
     }
   ],
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "WebAssignment/wsgi.py",
-      "headers": {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS, DELETE, PUT"
-      }
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
     },
     {
       "src": "/(.*)",
