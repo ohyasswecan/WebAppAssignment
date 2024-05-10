@@ -29,11 +29,12 @@ def home_views(request):
 
 class ClassEnrollmentListView(ListView):
     model = Class_Enrollment
-    paginate_by = 20  # only show 20 items per page
     template_name = 'ClassList.html'
     ordering = ['class_id'] #Order by class_id field
+    paginate_by = 100
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['form'] = Class_EnrollmentForm()
         return context
 
 #Template view version class view
@@ -61,9 +62,10 @@ class CourseListView(ListView):
     model = Course
     template_name = 'CourseList.html'
     ordering = ['course_id']
-
+    paginate_by = 100
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['form'] = CourseForm()
         return context
 
 class CourseDetailView(DetailView):
@@ -87,9 +89,11 @@ class SemesterListView(ListView):
     model = Semester
     template_name = 'SemesterList.html'
     ordering = ['semester_id']
+    paginate_by = 100
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['form'] = SemesterForm()
         return context
 
 class SemesterDetailView(DetailView):
@@ -113,9 +117,10 @@ class StudentListView(ListView):
     model = Student
     template_name = 'StudentList.html'
     ordering = ['student_id']
-
+    paginate_by = 100
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['form'] = StudentForm()
         return context
 
 class StudentDetailView(DetailView):
@@ -138,9 +143,11 @@ class LecturerListView(ListView):
     model = Lecturer
     template_name = 'LecturerList.html'
     ordering = ['staff_id']
+    paginate_by = 100
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['form'] = LecturerForm()
         return context
 
 class LecturerDetailView(DetailView):
@@ -164,10 +171,11 @@ class EnrollmentListView(ListView):
     model = Student_Enrollment
     template_name = 'EnrollmentList.html'
     ordering = ['-enrollment_date'] #most recent enrolled student to most early enrolled student
-
+    paginate_by = 100
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['form'] = StudentEnrollmentForm()
         return context
 
 class EnrollmentDetailView(DetailView):

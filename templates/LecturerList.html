@@ -6,11 +6,96 @@
 
 {% block content %}
     <h1>Lecturer List Page</h1>
-    <ul>
-        {% for lecturer_item in object_list %}
-        <li><a href="{% url 'lecturerdetail' lecturer_item.staff_id %}">{{ lecturer_item.staff_id }}</a> <a href="{% url 'createlecturer' %}">Create</a> <a href="{% url 'updatelecturer' lecturer_item.staff_id %}">Update</a> <a href="{% url 'deletelecturer' lecturer_item.staff_id %}">Delete</a></li>
-        {% empty %}
-            <li>No staff enlist yet</li>
+
+    <form method="POST" action="{% url 'createlecturer' %}">
+        {% csrf_token %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Staff ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Date of Birth</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>New</td>
+                <td>{{ form.staff_id }}</td>
+                <td>{{ form.lecturer_firstname }}</td>
+                <td>{{ form.lecturer_lastname }}</td>
+                <td>{{ form.lecturer_email }}</td>
+                <td>{{ form.lecturer_DOB }}</td>
+                <td>
+                    <button type="submit" class="btn btn-success">Add Lecturer</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Staff ID</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Date of Birth</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for lecturer in object_list %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ lecturer.staff_id }}</td>
+                <td>{{ lecturer.lecturer_firstname }}</td>
+                <td>{{ lecturer.lecturer_lastname }}</td>
+                <td>{{ lecturer.lecturer_email }}</td>
+                <td>{{ lecturer.lecturer_DOB }}</td>
+                <td><a href="{% url 'lecturerdetail' lecturer.staff_id %}" class="btn btn-primary btn-sm">Detail</a></td>
+                <td><a href="{% url 'updatelecturer' lecturer.staff_id %}" class="btn btn-primary btn-sm">Update</a>
+                </td>
+                <td><a href="{% url 'deletelecturer' lecturer.staff_id %}" class="btn btn-danger btn-sm"
+                       onclick="return confirm('Are you sure you want to delete this?');">Delete</a></td>
+            </tr>
         {% endfor %}
-    </ul>
+        </tbody>
+    </table>
+
+    {#    <ul>#}
+    {#        {% for lecturer_item in object_list %}#}
+    {#        <li><a href="{% url 'lecturerdetail' lecturer_item.staff_id %}">{{ lecturer_item.staff_id }}</a> <a href="{% url 'createlecturer' %}">Create</a> <a href="{% url 'updatelecturer' lecturer_item.staff_id %}">Update</a> <a href="{% url 'deletelecturer' lecturer_item.staff_id %}">Delete</a></li>#}
+    {#        {% empty %}#}
+    {#            <li>No staff enlist yet</li>#}
+    {#        {% endfor %}#}
+    {#    </ul>#}
+    
+    #bottom nav section
+     <nav>
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    
 {% endblock %}

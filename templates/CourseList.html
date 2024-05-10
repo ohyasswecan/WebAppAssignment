@@ -5,12 +5,83 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Course List Page</h1>
-    <ul>
-        {% for course_item in object_list %}
-        <li><a href="{% url 'coursedetail' course_item.course_id %}">{{ course_item.course_code }}</a> <a href="{% url 'createcourse' %}">Create</a> <a href="{% url 'updatecourse' course_item.course_id %}">Update</a> <a href="{% url 'deletecourse' course_item.course_id %}">Delete</a> </li>
-        {% empty %}
-            <li>No course yet</li>
+<h1>Course List Page</h1>
+
+<!-- Create Form within a Table Layout -->
+<form method="POST" action="{% url 'createcourse' %}">
+    {% csrf_token %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Course ID</th>
+                <th>Course Code</th>
+                <th>Course Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>New</td>
+                <td>{{ form.course_id }}</td>
+                <td>{{ form.course_code }}</td>
+                <td>{{ form.course_name }}</td>
+                <td>
+                    <button type="submit" class="btn btn-success">Add Course</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
+<!-- Course List -->
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Course ID</th>
+            <th scope="col">Course Code</th>
+            <th scope="col">Course Name</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for course in object_list %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ course.course_id }}</td>
+            <td>{{ course.course_code }}</td>
+            <td>{{course.course_name }}</td>
+            <td>
+                 <a href="{% url 'coursedetail' course.course_id %}" class="btn btn-primary btn-sm">Detail</a>
+                <a href="{% url 'updatecourse' course.course_id %}" class="btn btn-primary btn-sm">Update</a>
+                <a href="{% url 'deletecourse' course.course_id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this?');">Delete</a>
+            </td>
+        </tr>
         {% endfor %}
-    </ul>
+    </tbody>
+</table>
+    
+    #bottom nav section
+     <nav>
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
 {% endblock %}

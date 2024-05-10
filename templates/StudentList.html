@@ -6,11 +6,97 @@
 
 {% block content %}
     <h1>Student List Page</h1>
-    <ul>
-        {% for student_item in object_list %}
-        <li><a href="{% url 'studentdetail' student_item.student_id %}">{{ student_item.student_id }}</a> <a href="{% url 'createstudent' %}">Create</a> <a href="{% url 'updatestudent' student_item.student_id %}">Update</a> <a href="{% url 'deletestudent' student_item.student_id %}">Delete</a></li>
-        {% empty %}
-            <li>No student enrolled yet</li>
+
+    <form method="POST" action="{% url 'createstudent' %}">
+        {% csrf_token %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Staff ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Date of Birth</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>New</td>
+                <td>{{ form.student_id }}</td>
+                <td>{{ form.student_firstname }}</td>
+                <td>{{ form.student_lastname }}</td>
+                <td>{{ form.student_email }}</td>
+                <td>{{ form.student_DOB }}</td>
+                <td>
+                    <button type="submit" class="btn btn-success">Add Student</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Student ID</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Date of Birth</th>
+            <!-- Add other fields as necessary -->
+        </tr>
+        </thead>
+        <tbody>
+        {% for student in object_list %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ student.student_id }}</td>
+                <td>{{ student.student_firstname }}</td>
+                <td>{{ student.student_lastname }}</td>
+                <td>{{ student.student_email }}</td>
+                <td>{{ student.student_DOB }}</td>
+                <td><a href="{% url 'studentdetail' student.student_id %}" class="btn btn-primary btn-sm">Detail</a></td>
+                <td><a href="{% url 'updatestudent' student.student_id %}" class="btn btn-primary btn-sm">Update</a>
+                </td>
+                <td><a href="{% url 'deletestudent' student.student_id %}" class="btn btn-danger btn-sm"
+                       onclick="return confirm('Are you sure you want to delete this?');">Delete</a></td>
+                <!-- Add other fields as necessary -->
+            </tr>
         {% endfor %}
-    </ul>
+        </tbody>
+    </table>
+
+    {#    <ul>#}
+    {#        {% for student_item in object_list %}#}
+    {#        <li><a href="{% url 'studentdetail' student_item.student_id %}">{{ student_item.student_id }}</a> <a href="{% url 'createstudent' %}">Create</a> <a href="{% url 'updatestudent' student_item.student_id %}">Update</a> <a href="{% url 'deletestudent' student_item.student_id %}">Delete</a></li>#}
+    {#        {% empty %}#}
+    {#            <li>No student enrolled yet</li>#}
+    {#        {% endfor %}#}
+    {#    </ul>#}
+    
+    #bottom nav section
+     <nav>
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
 {% endblock %}
