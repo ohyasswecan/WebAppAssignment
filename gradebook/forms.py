@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 
 from gradebook.models import Class_Enrollment, Course,Lecturer,Semester,Student,Student_Enrollment
 
+class UploadExcelForm(forms.Form):
+    excel_file = forms.FileField()
 
 class Class_EnrollmentForm(forms.ModelForm):
     class Meta:

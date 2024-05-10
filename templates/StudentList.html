@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Student List Page</h1>
+    <h1>Student List Page---<a href="{% url 'uploadstudentlist' %}">Excel Upload Student List</a></h1>
 
     <form method="POST" action="{% url 'createstudent' %}">
         {% csrf_token %}

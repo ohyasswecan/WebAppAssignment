@@ -1,0 +1,20 @@
+{% extends 'Base_Nav.html' %}
+{% block title %}
+    Excel Upload Student List
+{% endblock %}
+
+{% block content %}
+<p>Place your Excel file contains Student List here</p>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Display Student List</button>
+    </form>
+    {{ df_html|safe }}
+    {% if show_insert_form %}
+     <form action="{% url 'insertstudentlist'  %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Insert Student List</button>
+     </form>
+    {% endif %}
+{% endblock %}

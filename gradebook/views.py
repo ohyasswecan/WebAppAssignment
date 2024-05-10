@@ -1,12 +1,13 @@
+import pandas as pd
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.views.generic import ListView, DetailView
-
+import datetime
 from gradebook.forms import Class_EnrollmentForm, CourseForm, SemesterForm, StudentForm, LecturerForm, \
-    StudentEnrollmentForm, RegisterForm
+    StudentEnrollmentForm, RegisterForm, UploadExcelForm
 from gradebook.models import Class_Enrollment, Course, Semester, Student, Lecturer, Student_Enrollment
 
 
@@ -18,7 +19,9 @@ def base_reflex(request):
 
 def home_views(request):
     return render(request, 'home.html')
-#template view version code
+
+
+# template view version code
 # def class_list_views(request):
 #     class_list = Class_Enrollment.objects.all()
 #     template = loader.get_template('ClassList.html')
@@ -30,14 +33,16 @@ def home_views(request):
 class ClassEnrollmentListView(ListView):
     model = Class_Enrollment
     template_name = 'ClassList.html'
-    ordering = ['class_id'] #Order by class_id field
+    ordering = ['class_id']  # Order by class_id field
     paginate_by = 100
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = Class_EnrollmentForm()
         return context
 
-#Template view version class view
+
+# Template view version class view
 # def generic_details_views(request, class_id):
 #     class_obj = Class_Enrollment.objects.get(pk=class_id)
 #     return render(request, 'ClassDetailPage.html', {'class_obj': class_obj})
@@ -49,7 +54,9 @@ class ClassEnrollmentDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
-#Template view version course list view
+
+
+# Template view version course list view
 # def course_list_views(request):
 #     course_list = Course.objects.all()
 #     template = loader.get_template('CourseList.html')
@@ -63,10 +70,12 @@ class CourseListView(ListView):
     template_name = 'CourseList.html'
     ordering = ['course_id']
     paginate_by = 100
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = CourseForm()
         return context
+
 
 class CourseDetailView(DetailView):
     model = Course
@@ -76,7 +85,8 @@ class CourseDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         return context
 
-#Tempalte version semester list view
+
+# Tempalte version semester list view
 # def semester_list_views(request):
 #     semester_list = Semester.objects.all()
 #     template = loader.get_template('SemesterList.html')
@@ -96,6 +106,7 @@ class SemesterListView(ListView):
         context['form'] = SemesterForm()
         return context
 
+
 class SemesterDetailView(DetailView):
     model = Semester
     template_name = 'SemesterDetailPage.html'
@@ -104,7 +115,8 @@ class SemesterDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         return context
 
-#Template Version student list view
+
+# Template Version student list view
 # def student_list_views(request):
 #     student_list = Student.objects.all()
 #     template = loader.get_template('StudentList.html')
@@ -118,19 +130,23 @@ class StudentListView(ListView):
     template_name = 'StudentList.html'
     ordering = ['student_id']
     paginate_by = 100
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = StudentForm()
         return context
 
+
 class StudentDetailView(DetailView):
     model = Student
     template_name = 'StudentDetailPage.html'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
 
-#Template version lecturer list view
+
+# Template version lecturer list view
 # def lecturer_list_views(request):
 #     lecturer_list = Lecturer.objects.all()
 #     template = loader.get_template('LecturerList.html')
@@ -150,6 +166,7 @@ class LecturerListView(ListView):
         context['form'] = LecturerForm()
         return context
 
+
 class LecturerDetailView(DetailView):
     model = Lecturer
     template_name = 'LecturerDetailPage.html'
@@ -158,7 +175,8 @@ class LecturerDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         return context
 
-#Template version student enrollment list view
+
+# Template version student enrollment list view
 # def enrollment_list_views(request):
 #     enrollment_list = Student_Enrollment.objects.all()
 #     template = loader.get_template('EnrollmentList.html')
@@ -170,13 +188,14 @@ class LecturerDetailView(DetailView):
 class EnrollmentListView(ListView):
     model = Student_Enrollment
     template_name = 'EnrollmentList.html'
-    ordering = ['-enrollment_date'] #most recent enrolled student to most early enrolled student
+    ordering = ['-enrollment_date']  # most recent enrolled student to most early enrolled student
     paginate_by = 100
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = StudentEnrollmentForm()
         return context
+
 
 class EnrollmentDetailView(DetailView):
     model = Student_Enrollment
@@ -185,11 +204,13 @@ class EnrollmentDetailView(DetailView):
     def get_object(self, queryset=None):
         student_id = self.kwargs.get('student_id')
         class_id = self.kwargs.get('class_id')
-        queryset = self.get_queryset() #query filling  #queryset().filter(field1 = value1) to search by field value
-        return queryset.get(student_id=student_id, class_id=class_id)#composite key query
+        queryset = self.get_queryset()  # query filling  #queryset().filter(field1 = value1) to search by field value
+        return queryset.get(student_id=student_id, class_id=class_id)  # composite key query
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+
 
 def create_class_views(request):
     if request.method == 'POST':
@@ -199,7 +220,9 @@ def create_class_views(request):
             return redirect('classlist')
     else:
         form = Class_EnrollmentForm()
-        return render(request, 'CreateInstanceForm.html', {'form': form,'object_list':Student_Enrollment.objects.all()})
+        return render(request, 'CreateInstanceForm.html',
+                      {'form': form, 'object_list': Student_Enrollment.objects.all()})
+
 
 def update_class_views(request, class_id):
     class_enrol = get_object_or_404(Class_Enrollment, pk=class_id)
@@ -210,7 +233,8 @@ def update_class_views(request, class_id):
             return redirect('classlist')
     else:
         form = Class_EnrollmentForm(instance=class_enrol)
-        return render(request, 'UpdateInstanceForm.html', {'form': form,'object': class_enrol})
+        return render(request, 'UpdateInstanceForm.html', {'form': form, 'object': class_enrol})
+
 
 def delete_class_views(request, class_id):
     class_enrol = get_object_or_404(Class_Enrollment, pk=class_id)
@@ -221,6 +245,7 @@ def delete_class_views(request, class_id):
         form = Class_EnrollmentForm(instance=class_enrol)
         return render(request, 'DeleteInstanceForm.html', {'form': form, 'object': class_enrol})
 
+
 def create_course_views(request):
     if request.method == 'POST':
         form = CourseForm(request.POST)
@@ -229,7 +254,8 @@ def create_course_views(request):
             return redirect('courselist')
     else:
         form = CourseForm()
-        return render(request, 'CreateInstanceForm.html', {'form': form,'object_list':Course.objects.all()})
+        return render(request, 'CreateInstanceForm.html', {'form': form, 'object_list': Course.objects.all()})
+
 
 def update_course_views(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
@@ -241,6 +267,7 @@ def update_course_views(request, course_id):
     else:
         form = CourseForm(instance=course)
         return render(request, 'UpdateInstanceForm.html', {'form': form, 'object': course})
+
 
 def delete_course_views(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
@@ -260,7 +287,7 @@ def create_semester_views(request):
             return redirect('semesterlist')
     else:
         form = SemesterForm()
-        return render(request, 'CreateInstanceForm.html', {'form': form,'object_list':Semester.objects.all()})
+        return render(request, 'CreateInstanceForm.html', {'form': form, 'object_list': Semester.objects.all()})
 
 
 def update_semester_views(request, semester_id):
@@ -273,6 +300,7 @@ def update_semester_views(request, semester_id):
     else:
         form = SemesterForm(instance=semester)
         return render(request, 'UpdateInstanceForm.html', {'form': form, 'object': semester})
+
 
 def delete_semester_views(request, semester_id):
     semester = get_object_or_404(Semester, pk=semester_id)
@@ -292,7 +320,7 @@ def create_student_views(request):
             return redirect('studentlist')
     else:
         form = StudentForm()
-        return render(request, 'CreateInstanceForm.html', {'form': form,'object_list':Student.objects.all()})
+        return render(request, 'CreateInstanceForm.html', {'form': form, 'object_list': Student.objects.all()})
 
 
 def update_student_views(request, student_id):
@@ -305,6 +333,7 @@ def update_student_views(request, student_id):
     else:
         form = StudentForm(instance=student)
         return render(request, 'UpdateInstanceForm.html', {'form': form, 'object': student})
+
 
 def delete_student_views(request, student_id):
     student = get_object_or_404(Student, pk=student_id)
@@ -324,7 +353,8 @@ def create_lecturer_views(request):
             return redirect('lecturerlist')
     else:
         form = LecturerForm()
-        return render(request, 'CreateInstanceForm.html', {'form': form,'object_list':Lecturer.objects.all()})
+        return render(request, 'CreateInstanceForm.html', {'form': form, 'object_list': Lecturer.objects.all()})
+
 
 def update_lecturer_views(request, staff_id):
     lecturer = get_object_or_404(Lecturer, pk=staff_id)
@@ -337,6 +367,7 @@ def update_lecturer_views(request, staff_id):
         form = LecturerForm(instance=lecturer)
         return render(request, 'UpdateInstanceForm.html', {'form': form, 'object': lecturer})
 
+
 def delete_lecturer_views(request, staff_id):
     lecturer = get_object_or_404(Lecturer, pk=staff_id)
     if request.method == 'POST':
@@ -346,6 +377,7 @@ def delete_lecturer_views(request, staff_id):
         form = LecturerForm(instance=lecturer)
         return render(request, 'DeleteInstanceForm.html', {'form': form, 'object': lecturer})
 
+
 def create_studentenrollment_views(request):
     if request.method == 'POST':
         form = StudentEnrollmentForm(request.POST)
@@ -354,7 +386,9 @@ def create_studentenrollment_views(request):
             return redirect('enrollmentlist')
     else:
         form = StudentEnrollmentForm()
-        return render(request, 'CreateInstanceForm.html', {'form': form,'object_list':Student_Enrollment.objects.all()})
+        return render(request, 'CreateInstanceForm.html',
+                      {'form': form, 'object_list': Student_Enrollment.objects.all()})
+
 
 def update_studentenrollment_views(request, student_id, class_id):
     student_enrol = get_object_or_404(Student_Enrollment, student_id=student_id, class_id=class_id)
@@ -367,6 +401,7 @@ def update_studentenrollment_views(request, student_id, class_id):
         form = StudentEnrollmentForm(instance=student_enrol)
         return render(request, 'UpdateInstanceForm.html', {'form': form, 'object': student_enrol})
 
+
 def delete_studentenrollment_views(request, student_id, class_id):
     student_enrol = get_object_or_404(Student_Enrollment, student_id=student_id, class_id=class_id)
     if request.method == 'POST':
@@ -375,6 +410,8 @@ def delete_studentenrollment_views(request, student_id, class_id):
     else:
         form = StudentEnrollmentForm(instance=student_enrol)
         return render(request, 'DeleteInstanceForm.html', {'form': form, 'object': student_enrol})
+
+
 def register(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
@@ -386,3 +423,56 @@ def register(request):
         form = RegisterForm()
     return render(request, 'registration/Register.html', {'form': form})
 
+
+def upload_excel(request):
+    if request.method == 'POST':
+        form = UploadExcelForm(request.POST, request.FILES)
+        if form.is_valid():
+            excel_file = request.FILES['excel_file']
+            df = pd.read_excel(excel_file)
+            request.session['excel_data'] = df.to_dict(orient='records')
+            df_html = df.to_html(classes='table table-striped')
+            return render(request, "ExcelUploadStudentList.html",
+                          {'form': form, 'df_html': df_html, 'show_insert_form': True})
+    else:
+        form = UploadExcelForm()
+    return render(request, "ExcelUploadStudentList.html", {'form': form, 'show_insert_form': False})
+
+
+def insert_list(request):
+    if request.method == 'POST':
+        df_records = request.session.get('excel_data')
+
+        if df_records:
+            # Iterate over each row in the DataFrame
+            for row in df_records:
+                try:
+                    # Convert date from MM/DD/YYYY to YYYY-MM-DD
+                    formatted_date = datetime.datetime.strptime(row['student_DOB'], '%m/%d/%Y').date()
+                    #skip the student from excel sheet when current student id duplicated with database record
+                    obj, created = Student.objects.get_or_create(
+                        student_id=row['student_id'],
+                        defaults={
+                            'student_firstname': row['student_firstname'],
+                            'student_lastname': row['student_lastname'],
+                            'student_email': row['student_email'],
+                            'student_DOB': formatted_date
+                        }
+                    )
+                    if not created:
+                        print(f"Skipped existing student with ID {row['student_id']}")
+                except Exception as e:
+                    print(f"Error inserting data for {row['student_firstname']} {row['student_lastname']}: {e}")
+                except Exception as e:
+                    # If there's an error during the creation, log the error and continue
+                    print(f"Error inserting data for {row['student_firstname']} {row['student_lastname']}: {e}")
+                    continue  # Optionally, you can decide to fail the whole process or just skip this record
+
+            # Clear the data from the session after successful insertion
+            del request.session['excel_data']
+
+            return HttpResponse('Data inserted successfully')
+        else:
+            return HttpResponse('No data found to insert', status=404)
+    else:
+        return HttpResponse('POST request expected', status=400)
