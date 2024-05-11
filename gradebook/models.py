@@ -23,6 +23,8 @@ class UserProfile(models.Model):
     avatar = models.ImageField(upload_to='avatars/', default='avatars/default_user.png', blank=True)
 
     def save(self, *args, **kwargs):
+        if self.user.is_superuser:
+            self.role = 'Administrator'
         if not self.avatar:  # If no avatar is uploaded
             # Path to the default image
             default_path = os.path.join(settings.MEDIA_ROOT, 'avatars/default_user.png')
