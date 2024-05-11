@@ -2,10 +2,16 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from gradebook.models import Class_Enrollment, Course,Lecturer,Semester,Student,Student_Enrollment
+from gradebook.models import Class_Enrollment, Course, Lecturer, Semester, Student, Student_Enrollment, UserProfile
+
 
 class UploadExcelForm(forms.Form):
     excel_file = forms.FileField()
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = '__all__'
 
 class Class_EnrollmentForm(forms.ModelForm):
     class Meta:

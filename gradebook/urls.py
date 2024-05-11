@@ -8,6 +8,7 @@ from gradebook.views import ClassEnrollmentListView, ClassEnrollmentDetailView, 
 
 urlpatterns = [
     path('', views.home_views, name='home'),
+    path('UserProfile/', views.update_userprofile_views, name='update_userprofile'),
     path('CourseList/', CourseListView.as_view(), name='courselist'),
     path('CourseList/CreateCourse/', views.create_course_views, name='createcourse'),
     path('CourseList/CourseDetail/UpdateCourse/<int:course_id>/', views.update_course_views, name='updatecourse'),

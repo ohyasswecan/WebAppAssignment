@@ -1,5 +1,6 @@
 import pandas as pd
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -7,8 +8,8 @@ from django.template import loader
 from django.views.generic import ListView, DetailView
 import datetime
 from gradebook.forms import Class_EnrollmentForm, CourseForm, SemesterForm, StudentForm, LecturerForm, \
-    StudentEnrollmentForm, RegisterForm, UploadExcelForm
-from gradebook.models import Class_Enrollment, Course, Semester, Student, Lecturer, Student_Enrollment
+    StudentEnrollmentForm, RegisterForm, UploadExcelForm, UserProfileForm
+from gradebook.models import Class_Enrollment, Course, Semester, Student, Lecturer, Student_Enrollment, UserProfile
 
 
 # Create your views here.
@@ -463,10 +464,10 @@ def insert_list(request):
                         print(f"Skipped existing student with ID {row['student_id']}")
                 except Exception as e:
                     print(f"Error inserting data for {row['student_firstname']} {row['student_lastname']}: {e}")
-                except Exception as e:
-                    # If there's an error during the creation, log the error and continue
-                    print(f"Error inserting data for {row['student_firstname']} {row['student_lastname']}: {e}")
-                    continue  # Optionally, you can decide to fail the whole process or just skip this record
+                # except Exception as e:
+                #     # If there's an error during the creation, log the error and continue
+                #     print(f"Error inserting data for {row['student_firstname']} {row['student_lastname']}: {e}")
+                #     continue  # Optionally, you can decide to fail the whole process or just skip this record
 
             # Clear the data from the session after successful insertion
             del request.session['excel_data']
@@ -476,3 +477,23 @@ def insert_list(request):
             return HttpResponse('No data found to insert', status=404)
     else:
         return HttpResponse('POST request expected', status=400)
+
+
+@login_required
+def update_userprofile_views(request):
+    # Get the UserProfile instance linked to the current logged-in user.
+    # Assuming UserProfile has a one-to-one link to the User model.
+    user_profile = get_object_or_404(UserProfile, user=request.user)
+
+    if request.method == 'POST':
+        # Pass the instance of the existing profile to the form.
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            # Redirect to a success page or profile detail view.
+            return redirect('update_userprofile')
+    else:
+        # If not a POST request, instantiate the form with the existing profile data.
+        form = UserProfileForm(instance=user_profile)
+
+    return render(request, 'UpdateInstanceForm.html', {'form': form})

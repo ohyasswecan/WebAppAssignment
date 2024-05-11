@@ -3,6 +3,7 @@ from django.contrib import admin
 from gradebook import models
 
 # Register your models here.
+admin.site.register(models.UserProfile)
 admin.site.register(models.Student)
 admin.site.register(models.Course)
 admin.site.register(models.Lecturer)

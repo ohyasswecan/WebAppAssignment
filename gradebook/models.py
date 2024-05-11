@@ -1,6 +1,42 @@
+import os
+
+from django.conf import settings
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.files import File
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.utils import timezone
+
+ROLE_CHOICES = (
+    ('Student', 'Student'),
+    ('Lecturer', 'Lecturer'),
+    ('Administrator', 'Administrator'),
+)
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='Student')
+    avatar = models.ImageField(upload_to='avatars/', default='avatars/default_user.png', blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.avatar:  # If no avatar is uploaded
+            # Path to the default image
+            default_path = os.path.join(settings.MEDIA_ROOT, 'avatars/default_user.png')
+            self.avatar = File(default_path)
+        super(UserProfile, self).save(*args, **kwargs)
+    def __str__(self):
+        return f"{self.user.username}'s profile"
+
+
+@receiver(post_save, sender=User)
+def create_or_update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+    instance.profile.save()
 
 
 class Course(models.Model):
@@ -31,6 +67,7 @@ class Semester(models.Model):
         verbose_name="Year"
     )
     semester_name = models.CharField(max_length=255, verbose_name="Semester")
+
     def __str__(self):
         return self.semester_name
 
@@ -60,12 +97,17 @@ class Class_Enrollment(models.Model):  # Class
 class Student_Enrollment(models.Model):
     student_id = models.ForeignKey('Student', on_delete=models.CASCADE, verbose_name="Student ID")
     class_id = models.ForeignKey('Class_Enrollment', on_delete=models.CASCADE, verbose_name="Class ID")
-    grade_year = models.IntegerField(verbose_name="Grade")
+    _grade = models.IntegerField(verbose_name="Grade")
     enrollment_date = models.DateField(verbose_name="Enrollment DateTime")
     grade_date = models.DateField(verbose_name="Grade DateTime")
 
     class Meta:
         unique_together = ('student_id', 'class_id')  # enforce composite primary key
 
+#override save method to update time whenever new object is saved
+    def save(self, *args, **kwargs):
+        # Update grade_date to the current date every time the object is saved.
+        self.grade_date = timezone.now().date()
+        super(Student_Enrollment, self).save(*args, **kwargs)
     def __str__(self):
         return f'name:{self.student_id}&class{self.class_id}'
