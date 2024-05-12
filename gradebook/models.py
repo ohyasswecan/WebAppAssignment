@@ -104,7 +104,7 @@ class Class_Enrollment(models.Model):  # Class
 class Student_Enrollment(models.Model):
     student_id = models.ForeignKey('Student', on_delete=models.CASCADE, verbose_name="Student ID")
     class_id = models.ForeignKey('Class_Enrollment', on_delete=models.CASCADE, verbose_name="Class ID")
-    _grade = models.IntegerField(verbose_name="Grade")
+    student_grade = models.IntegerField(verbose_name="Grade")
     enrollment_date = models.DateField(verbose_name="Enrollment DateTime")
     grade_date = models.DateField(verbose_name="Grade DateTime")
 

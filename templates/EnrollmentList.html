@@ -28,7 +28,7 @@
                 <td>{{ form.class_id }}</td>
                 <td>{{ form.enrollment_date }}</td>
                 <td>{{ form.grade_date }}</td>
-                <td>{{ form.grade_year }}</td>
+                <td>{{ form.student_grade }}</td>
                 <td>
                     <button type="submit" class="btn btn-success">Add Enrollment</button>
                 </td>
@@ -57,7 +57,7 @@
                 <td>{{ enrollment.class_id }}</td>
                 <td>{{ enrollment.enrollment_date }}</td>
                 <td>{{ enrollment.grade_date }}</td>
-                <td>{{ enrollment.grade_year }}</td>
+                <td>{{ enrollment.student_grade }}</td>
                 <td><a href="{% url 'enrollmentdetail' enrollment.student_id.student_id enrollment.class_id.class_id %}" class="btn btn-primary btn-sm">Detail</a></td>
                 <td>
                     <a href="{% url 'updatestudentenrollment' enrollment.student_id.student_id enrollment.class_id.class_id %}"
