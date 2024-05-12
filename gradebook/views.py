@@ -1,6 +1,8 @@
 import pandas as pd
+from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -8,7 +10,7 @@ from django.template import loader
 from django.views.generic import ListView, DetailView
 import datetime
 from gradebook.forms import Class_EnrollmentForm, CourseForm, SemesterForm, StudentForm, LecturerForm, \
-    StudentEnrollmentForm, RegisterForm, UploadExcelForm, UserProfileForm
+    StudentEnrollmentForm, RegisterForm, UploadExcelForm, UserProfileForm, CustomUserCreationForm
 from gradebook.models import Class_Enrollment, Course, Semester, Student, Lecturer, Student_Enrollment, UserProfile
 
 
@@ -20,6 +22,7 @@ def base_reflex(request):
 
 def home_views(request):
     return render(request, 'home.html')
+
 
 
 # template view version code
@@ -415,13 +418,13 @@ def delete_studentenrollment_views(request, student_id, class_id):
 
 def register(request):
     if request.method == "POST":
-        form = RegisterForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)  # Optionally log the user in directly
             return redirect('home')  # Redirect to a home page or other appropriate page
     else:
-        form = RegisterForm()
+        form = CustomUserCreationForm()
     return render(request, 'registration/Register.html', {'form': form})
 
 

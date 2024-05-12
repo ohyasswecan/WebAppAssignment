@@ -1,3 +1,4 @@
+import email
 import os
 
 from django.conf import settings
@@ -22,9 +23,13 @@ class UserProfile(models.Model):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='Student')
     avatar = models.ImageField(upload_to='avatars/', default='avatars/default_user.png', blank=True)
 
+
     def save(self, *args, **kwargs):
+        email = self.user.email
         if self.user.is_superuser:
             self.role = 'Administrator'
+        elif Lecturer.objects.filter(lecturer_email=email).exists():
+            self.role = 'Lecturer'
         if not self.avatar:  # If no avatar is uploaded
             # Path to the default image
             default_path = os.path.join(settings.MEDIA_ROOT, 'avatars/default_user.png')
