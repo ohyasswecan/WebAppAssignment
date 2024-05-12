@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -34,7 +35,7 @@ def home_views(request):
 #     }
 #     return HttpResponse(template.render(context, request))
 
-class ClassEnrollmentListView(ListView):
+class ClassEnrollmentListView(LoginRequiredMixin,ListView):
     model = Class_Enrollment
     template_name = 'ClassList.html'
     ordering = ['class_id']  # Order by class_id field
@@ -43,6 +44,7 @@ class ClassEnrollmentListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = Class_EnrollmentForm()
+        context['user'] = self.request.user
         return context
 
 
@@ -51,12 +53,14 @@ class ClassEnrollmentListView(ListView):
 #     class_obj = Class_Enrollment.objects.get(pk=class_id)
 #     return render(request, 'ClassDetailPage.html', {'class_obj': class_obj})
 
-class ClassEnrollmentDetailView(DetailView):
+class ClassEnrollmentDetailView(LoginRequiredMixin,DetailView):
     model = Class_Enrollment
     template_name = 'ClassDetailPage.html'
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
         return context
 
 
@@ -69,7 +73,7 @@ class ClassEnrollmentDetailView(DetailView):
 #     }
 #     return HttpResponse(template.render(context, request))
 
-class CourseListView(ListView):
+class CourseListView(LoginRequiredMixin,ListView):
     model = Course
     template_name = 'CourseList.html'
     ordering = ['course_id']
@@ -77,16 +81,18 @@ class CourseListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
         context['form'] = CourseForm()
         return context
 
 
-class CourseDetailView(DetailView):
+class CourseDetailView(LoginRequiredMixin,DetailView):
     model = Course
     template_name = 'CourseDetailPage.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
         return context
 
 
@@ -99,7 +105,7 @@ class CourseDetailView(DetailView):
 #     }
 #     return HttpResponse(template.render(context,request))
 
-class SemesterListView(ListView):
+class SemesterListView(LoginRequiredMixin,ListView):
     model = Semester
     template_name = 'SemesterList.html'
     ordering = ['semester_id']
@@ -107,16 +113,19 @@ class SemesterListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
         context['form'] = SemesterForm()
         return context
 
 
-class SemesterDetailView(DetailView):
+class SemesterDetailView(LoginRequiredMixin,DetailView):
     model = Semester
     template_name = 'SemesterDetailPage.html'
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
         return context
 
 
@@ -129,24 +138,28 @@ class SemesterDetailView(DetailView):
 #     }
 #     return HttpResponse(template.render(context, request))
 
-class StudentListView(ListView):
+class StudentListView(LoginRequiredMixin,ListView):
     model = Student
     template_name = 'StudentList.html'
     ordering = ['student_id']
     paginate_by = 100
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = StudentForm()
+        context['user'] = self.request.user
         return context
 
 
-class StudentDetailView(DetailView):
+class StudentDetailView(LoginRequiredMixin,DetailView):
     model = Student
     template_name = 'StudentDetailPage.html'
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
         return context
 
 
@@ -159,24 +172,27 @@ class StudentDetailView(DetailView):
 #     }
 #     return HttpResponse(template.render(context, request))
 
-class LecturerListView(ListView):
+class LecturerListView(LoginRequiredMixin,ListView):
     model = Lecturer
     template_name = 'LecturerList.html'
     ordering = ['staff_id']
     paginate_by = 100
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = LecturerForm()
+        context['user'] = self.request.user
         return context
 
 
-class LecturerDetailView(DetailView):
+class LecturerDetailView(LoginRequiredMixin,DetailView):
     model = Lecturer
     template_name = 'LecturerDetailPage.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
         return context
 
 
@@ -189,7 +205,7 @@ class LecturerDetailView(DetailView):
 #     }
 #     return HttpResponse(template.render(context, request))
 
-class EnrollmentListView(ListView):
+class EnrollmentListView(LoginRequiredMixin,ListView):
     model = Student_Enrollment
     template_name = 'EnrollmentList.html'
     ordering = ['-enrollment_date']  # most recent enrolled student to most early enrolled student
@@ -198,10 +214,11 @@ class EnrollmentListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = StudentEnrollmentForm()
+        context['user'] = self.request.user
         return context
 
 
-class EnrollmentDetailView(DetailView):
+class EnrollmentDetailView(LoginRequiredMixin,DetailView):
     model = Student_Enrollment
     template_name = 'EnrollmentDetailPage.html'
 
@@ -213,9 +230,10 @@ class EnrollmentDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
         return context
 
-
+@login_required
 def create_class_views(request):
     if request.method == 'POST':
         form = Class_EnrollmentForm(request.POST)
@@ -227,7 +245,7 @@ def create_class_views(request):
         return render(request, 'CreateInstanceForm.html',
                       {'form': form, 'object_list': Student_Enrollment.objects.all()})
 
-
+@login_required
 def update_class_views(request, class_id):
     class_enrol = get_object_or_404(Class_Enrollment, pk=class_id)
     if request.method == 'POST':
@@ -239,7 +257,7 @@ def update_class_views(request, class_id):
         form = Class_EnrollmentForm(instance=class_enrol)
         return render(request, 'UpdateInstanceForm.html', {'form': form, 'object': class_enrol})
 
-
+@login_required
 def delete_class_views(request, class_id):
     class_enrol = get_object_or_404(Class_Enrollment, pk=class_id)
     if request.method == 'POST':
@@ -249,7 +267,7 @@ def delete_class_views(request, class_id):
         form = Class_EnrollmentForm(instance=class_enrol)
         return render(request, 'DeleteInstanceForm.html', {'form': form, 'object': class_enrol})
 
-
+@login_required
 def create_course_views(request):
     if request.method == 'POST':
         form = CourseForm(request.POST)
@@ -260,7 +278,7 @@ def create_course_views(request):
         form = CourseForm()
         return render(request, 'CreateInstanceForm.html', {'form': form, 'object_list': Course.objects.all()})
 
-
+@login_required
 def update_course_views(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
     if request.method == 'POST':
@@ -272,7 +290,7 @@ def update_course_views(request, course_id):
         form = CourseForm(instance=course)
         return render(request, 'UpdateInstanceForm.html', {'form': form, 'object': course})
 
-
+@login_required
 def delete_course_views(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
     if request.method == 'POST':
@@ -282,7 +300,7 @@ def delete_course_views(request, course_id):
         form = Class_EnrollmentForm(instance=course)
         return render(request, 'DeleteInstanceForm.html', {'form': form, 'object': course})
 
-
+@login_required
 def create_semester_views(request):
     if request.method == 'POST':
         form = SemesterForm(request.POST)
@@ -293,7 +311,7 @@ def create_semester_views(request):
         form = SemesterForm()
         return render(request, 'CreateInstanceForm.html', {'form': form, 'object_list': Semester.objects.all()})
 
-
+@login_required
 def update_semester_views(request, semester_id):
     semester = get_object_or_404(Semester, pk=semester_id)
     if request.method == 'POST':
@@ -305,7 +323,7 @@ def update_semester_views(request, semester_id):
         form = SemesterForm(instance=semester)
         return render(request, 'UpdateInstanceForm.html', {'form': form, 'object': semester})
 
-
+@login_required
 def delete_semester_views(request, semester_id):
     semester = get_object_or_404(Semester, pk=semester_id)
     if request.method == 'POST':
@@ -315,7 +333,7 @@ def delete_semester_views(request, semester_id):
         form = SemesterForm(instance=semester)
         return render(request, 'DeleteInstanceForm.html', {'form': form, 'object': semester})
 
-
+@login_required
 def create_student_views(request):
     if request.method == 'POST':
         form = StudentForm(request.POST)
@@ -326,7 +344,7 @@ def create_student_views(request):
         form = StudentForm()
         return render(request, 'CreateInstanceForm.html', {'form': form, 'object_list': Student.objects.all()})
 
-
+@login_required
 def update_student_views(request, student_id):
     student = get_object_or_404(Student, pk=student_id)
     if request.method == 'POST':
@@ -338,7 +356,7 @@ def update_student_views(request, student_id):
         form = StudentForm(instance=student)
         return render(request, 'UpdateInstanceForm.html', {'form': form, 'object': student})
 
-
+@login_required
 def delete_student_views(request, student_id):
     student = get_object_or_404(Student, pk=student_id)
     if request.method == 'POST':
@@ -348,7 +366,7 @@ def delete_student_views(request, student_id):
         form = StudentForm(instance=student)
         return render(request, 'DeleteInstanceForm.html', {'form': form, 'object': student})
 
-
+@login_required
 def create_lecturer_views(request):
     if request.method == 'POST':
         form = LecturerForm(request.POST)
@@ -359,7 +377,7 @@ def create_lecturer_views(request):
         form = LecturerForm()
         return render(request, 'CreateInstanceForm.html', {'form': form, 'object_list': Lecturer.objects.all()})
 
-
+@login_required
 def update_lecturer_views(request, staff_id):
     lecturer = get_object_or_404(Lecturer, pk=staff_id)
     if request.method == 'POST':
@@ -371,7 +389,7 @@ def update_lecturer_views(request, staff_id):
         form = LecturerForm(instance=lecturer)
         return render(request, 'UpdateInstanceForm.html', {'form': form, 'object': lecturer})
 
-
+@login_required
 def delete_lecturer_views(request, staff_id):
     lecturer = get_object_or_404(Lecturer, pk=staff_id)
     if request.method == 'POST':
@@ -381,7 +399,7 @@ def delete_lecturer_views(request, staff_id):
         form = LecturerForm(instance=lecturer)
         return render(request, 'DeleteInstanceForm.html', {'form': form, 'object': lecturer})
 
-
+@login_required
 def create_studentenrollment_views(request):
     if request.method == 'POST':
         form = StudentEnrollmentForm(request.POST)
@@ -393,7 +411,7 @@ def create_studentenrollment_views(request):
         return render(request, 'CreateInstanceForm.html',
                       {'form': form, 'object_list': Student_Enrollment.objects.all()})
 
-
+@login_required
 def update_studentenrollment_views(request, student_id, class_id):
     student_enrol = get_object_or_404(Student_Enrollment, student_id=student_id, class_id=class_id)
     if request.method == 'POST':
@@ -405,7 +423,7 @@ def update_studentenrollment_views(request, student_id, class_id):
         form = StudentEnrollmentForm(instance=student_enrol)
         return render(request, 'UpdateInstanceForm.html', {'form': form, 'object': student_enrol})
 
-
+@login_required
 def delete_studentenrollment_views(request, student_id, class_id):
     student_enrol = get_object_or_404(Student_Enrollment, student_id=student_id, class_id=class_id)
     if request.method == 'POST':
@@ -427,7 +445,7 @@ def register(request):
         form = CustomUserCreationForm()
     return render(request, 'registration/Register.html', {'form': form})
 
-
+@login_required
 def upload_excel(request):
     if request.method == 'POST':
         form = UploadExcelForm(request.POST, request.FILES)
@@ -442,7 +460,7 @@ def upload_excel(request):
         form = UploadExcelForm()
     return render(request, "ExcelUploadStudentList.html", {'form': form, 'show_insert_form': False})
 
-
+@login_required
 def insert_list(request):
     if request.method == 'POST':
         df_records = request.session.get('excel_data')
