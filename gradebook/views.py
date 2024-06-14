@@ -10,10 +10,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.views.generic import ListView, DetailView
 import datetime
+
+from rest_framework import viewsets
+
 from gradebook.forms import Class_EnrollmentForm, CourseForm, SemesterForm, StudentForm, LecturerForm, \
     StudentEnrollmentForm, RegisterForm, UploadExcelForm, UserProfileForm, CustomUserCreationForm
 from gradebook.models import Class_Enrollment, Course, Semester, Student, Lecturer, Student_Enrollment, UserProfile
-
+from .serializers import CourseSerializer, SemesterSerializer, LecturerSerializer, StudentSerializer, ClassEnrollmentSerializer, StudentEnrollmentSerializer
 
 # Create your views here.
 def base_reflex(request):
@@ -518,3 +521,28 @@ def update_userprofile_views(request):
         form = UserProfileForm(instance=user_profile)
 
     return render(request, 'UpdateInstanceForm.html', {'form': form})
+
+
+class CourseViewSet(viewsets.ModelViewSet):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+
+class SemesterViewSet(viewsets.ModelViewSet):
+    queryset = Semester.objects.all()
+    serializer_class = SemesterSerializer
+
+class LecturerViewSet(viewsets.ModelViewSet):
+    queryset = Lecturer.objects.all()
+    serializer_class = LecturerSerializer
+
+class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+class ClassEnrollmentViewSet(viewsets.ModelViewSet):
+    queryset = Class_Enrollment.objects.all()
+    serializer_class = ClassEnrollmentSerializer
+
+class StudentEnrollmentViewSet(viewsets.ModelViewSet):
+    queryset = Student_Enrollment.objects.all()
+    serializer_class = StudentEnrollmentSerializer

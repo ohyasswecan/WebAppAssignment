@@ -1,13 +1,25 @@
 from django.contrib.auth import admin
-from django.urls import path
+from django.urls import path, include
 
 from gradebook import views
+from rest_framework.routers import DefaultRouter
 from gradebook.views import ClassEnrollmentListView, ClassEnrollmentDetailView, CourseListView, CourseDetailView, \
     EnrollmentDetailView, EnrollmentListView, LecturerListView, LecturerDetailView, SemesterListView, \
     SemesterDetailView, StudentListView, StudentDetailView
+from .views import (CourseViewSet, SemesterViewSet, LecturerViewSet,
+                    StudentViewSet, ClassEnrollmentViewSet, StudentEnrollmentViewSet)
+
+router = DefaultRouter()
+router.register(r'courses', CourseViewSet)
+router.register(r'semesters', SemesterViewSet)
+router.register(r'lecturers', LecturerViewSet)
+router.register(r'students', StudentViewSet)
+router.register(r'class_enrollments', ClassEnrollmentViewSet)
+router.register(r'student_enrollments', StudentEnrollmentViewSet)
 
 urlpatterns = [
     path('', views.home_views, name='home'),
+    path('api/', include(router.urls)),
     path('UserProfile/', views.update_userprofile_views, name='update_userprofile'),
     path('CourseList/', CourseListView.as_view(), name='courselist'),
     path('CourseList/CreateCourse/', views.create_course_views, name='createcourse'),
