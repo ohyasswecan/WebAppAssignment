@@ -22,6 +22,7 @@ import UpdateSemester from "./components/UpdateSemester";
 import UpdateStudent from "./components/UpdateStudent";
 import UpdateLecturer from "./components/UpdateLecturer";
 import UpdateEnrollment from "./components/UpdateEnrollment";
+import UploadExcel from "./components/UploadExcel";
 
 function App() {
     return (
@@ -46,6 +47,7 @@ function App() {
                 <Route path="/student_enrollments" element={<EnrollmentList/>}/>
                 <Route path="/student_enrollments/:id" element={<EnrollmentDetail/>}/>
                 <Route path="/student_enrollments/update/:id" element={<UpdateEnrollment/>}/>
+                <Route path="/upload_excel" element={<UploadExcel/>}/>
                 {/* Add other routes here */}
             </Routes>
         </Layout>

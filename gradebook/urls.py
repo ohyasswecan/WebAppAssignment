@@ -32,6 +32,8 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/student_enrollments/', EnrollmentListView.as_view(), name='student_enrollment-list'),
     path('api/student_enrollments/<int:pk>/', EnrollmentDetailView.as_view(), name='student_enrollment-detail'),
+    path('api/upload_excel/', UploadExcelView.as_view(), name='upload_excel'),
+    path('api/insert_list/', InsertListView.as_view(), name='insert_list'),
     path('UserProfile/', UpdateUserProfileView.as_view(), name='update_userprofile'),
     path('CourseList/', CourseListView.as_view(), name='courselist'),
     path('CourseList/CreateCourse/', CreateCourseView.as_view(), name='createcourse'),

@@ -73,7 +73,7 @@ const StudentList = () => {
         <Layout>
             <div>
                 <h1>Student List Page</h1>
-                <a href="/StudentList/UploadStudentList">Excel Upload Student List</a>
+                <a href="/upload_excel/">Excel Upload Student List</a>
                 <form onSubmit={handleSubmit}>
                     <table className="table">
                         <thead>
