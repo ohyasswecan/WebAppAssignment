@@ -5,7 +5,7 @@ from .models import Course, Semester, Lecturer, Student, Class_Enrollment, Stude
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = '__all__'  # Or list specific fields you want to include in the serializer
+        fields = '__all__'
 
 
 class SemesterSerializer(serializers.ModelSerializer):
