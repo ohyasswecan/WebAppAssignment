@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import Layout from './Layout';
 
 const SemesterList = () => {
@@ -13,6 +14,7 @@ const SemesterList = () => {
         semester_name: '',
         semester_year: '',
     });
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchSemesters = async () => {
@@ -41,6 +43,21 @@ const SemesterList = () => {
             setSemesters([...semesters, response.data]);
         } catch (error) {
             console.error('Error adding semester:', error);
+        }
+    };
+
+    const handleEdit = (semesterId) => {
+        navigate(`/semesters/update/${semesterId}`);
+    };
+
+    const handleDelete = async (id) => {
+        if (window.confirm('Are you sure you want to delete this?')) {
+            try {
+                await axios.delete(`http://127.0.0.1:8000/api/semesters/${id}/`);
+                setSemesters(semesters.filter(semester => semester.semester_id !== id));
+            } catch (error) {
+                console.error('Error deleting semester:', error);
+            }
         }
     };
 
@@ -80,9 +97,8 @@ const SemesterList = () => {
                                     <td>{semester.semester_year}</td>
                                     <td>
                                         <a href={`/semesters/${semester.semester_id}`} className="btn btn-primary btn-sm">Detail</a>
-                                        <a href={`/semesters/update/${semester.semester_id}`} className="btn btn-primary btn-sm">Update</a>
-                                        <a href={`/semesters/delete/${semester.semester_id}`} className="btn btn-danger btn-sm"
-                                           onClick={() => window.confirm('Are you sure you want to delete this?')}>Delete</a>
+                                        <button onClick={() => handleEdit(semester.semester_id)} className="btn btn-primary btn-sm">Update</button>
+                                        <button onClick={() => handleDelete(semester.semester_id)} className="btn btn-danger btn-sm">Delete</button>
                                     </td>
                                 </tr>
                             ))}
@@ -91,7 +107,7 @@ const SemesterList = () => {
                 </form>
                 <nav>
                     <ul className="pagination">
-                        {/* Pagination logic here if using pagination */}
+                        {/* here for future */}
                     </ul>
                 </nav>
             </div>

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import Layout from './Layout';
 
 const ClassList = () => {
@@ -15,6 +16,7 @@ const ClassList = () => {
         class_lecturer: '',
         class_semester: '',
     });
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchClasses = async () => {
@@ -43,6 +45,25 @@ const ClassList = () => {
             setClasses([...classes, response.data]);
         } catch (error) {
             console.error('Error adding class:', error);
+        }
+    };
+
+    const handleDetail = (classId) => {
+        navigate(`/class_enrollments/${classId}`);
+    };
+
+    const handleEdit = (classId) => {
+        navigate(`/class_enrollments/update/${classId}`);
+    };
+
+    const handleDelete = async (id) => {
+        if (window.confirm('Are you sure you want to delete this?')) {
+            try {
+                await axios.delete(`http://127.0.0.1:8000/api/class_enrollments/${id}/`);
+                setClasses(classes.filter(classItem => classItem.class_id !== id));
+            } catch (error) {
+                console.error('Error deleting class:', error);
+            }
         }
     };
 
@@ -87,10 +108,9 @@ const ClassList = () => {
                                     <td>{classItem.class_lecturer}</td>
                                     <td>{classItem.class_semester}</td>
                                     <td>
-                                        <a href={`/class_enrollments/${classItem.class_id}`} className="btn btn-primary btn-sm">Detail</a>
-                                        <a href={`/class_enrollments/update/${classItem.class_id}`} className="btn btn-primary btn-sm">Update</a>
-                                        <a href={`/class_enrollments/delete/${classItem.class_id}`} className="btn btn-danger btn-sm"
-                                           onClick={() => window.confirm('Are you sure you want to delete this?')}>Delete</a>
+                                        <button onClick={() => handleDetail(classItem.class_id)} className="btn btn-primary btn-sm">Detail</button>
+                                        <button onClick={() => handleEdit(classItem.class_id)} className="btn btn-primary btn-sm">Update</button>
+                                        <button onClick={() => handleDelete(classItem.class_id)} className="btn btn-danger btn-sm">Delete</button>
                                     </td>
                                 </tr>
                             ))}

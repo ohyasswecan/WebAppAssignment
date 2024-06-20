@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import Layout from './Layout';
 
 const LecturerList = () => {
@@ -15,6 +16,7 @@ const LecturerList = () => {
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchLecturers = async () => {
@@ -50,6 +52,22 @@ const LecturerList = () => {
             });
         } catch (error) {
             console.error('Error adding lecturer:', error);
+        }
+    };
+
+    const handleEdit = (staffId) => {
+        navigate(`/lecturers/update/${staffId}`);
+    };
+
+    const handleDelete = async (staffId) => {
+        if (window.confirm('Are you sure you want to delete this?')) {
+            try {
+                await axios.delete(`http://127.0.0.1:8000/api/lecturers/${staffId}/`);
+                setLecturers(lecturers.filter(lecturer => lecturer.staff_id !== staffId));
+            } catch (error) {
+                console.error('Error deleting lecturer:', error);
+                setError(error);
+            }
         }
     };
 
@@ -95,8 +113,8 @@ const LecturerList = () => {
                                     <td>{lecturer.lecturer_DOB}</td>
                                     <td>
                                         <a href={`/lecturers/${lecturer.staff_id}`} className="btn btn-primary btn-sm">Detail</a>
-                                        <a href={`/lecturers/update/${lecturer.staff_id}`} className="btn btn-primary btn-sm">Update</a>
-                                        <a href={`/lecturers/delete/${lecturer.staff_id}`} className="btn btn-danger btn-sm" onClick={() => window.confirm('Are you sure you want to delete this?')}>Delete</a>
+                                        <button onClick={() => handleEdit(lecturer.staff_id)} className="btn btn-primary btn-sm">Update</button>
+                                        <button onClick={() => handleDelete(lecturer.staff_id)} className="btn btn-danger btn-sm">Delete</button>
                                     </td>
                                 </tr>
                             ))}
@@ -106,7 +124,7 @@ const LecturerList = () => {
                 {/* Pagination if needed */}
                 <nav>
                     <ul className="pagination">
-                        {/* Pagination logic here if using pagination */}
+                        {/* Pagination logic here for future */}
                     </ul>
                 </nav>
             </div>

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import Layout from './Layout';
 
 const CourseList = () => {
@@ -13,6 +14,7 @@ const CourseList = () => {
         course_code: '',
         course_name: '',
     });
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchCourses = async () => {
@@ -42,6 +44,21 @@ const CourseList = () => {
         } catch (error) {
             console.error('Error adding course:', error);
         }
+    };
+
+    const handleDelete = async (courseId) => {
+        if (window.confirm('Are you sure you want to delete this?')) {
+            try {
+                await axios.delete(`http://127.0.0.1:8000/api/courses/${courseId}/`);
+                setCourses(courses.filter(course => course.course_id !== courseId));
+            } catch (error) {
+                console.error('Error deleting course:', error);
+            }
+        }
+    };
+
+    const handleUpdate = (courseId) => {
+        navigate(`/courses/update/${courseId}`);
     };
 
     if (loading) return <p>Loading...</p>;
@@ -80,9 +97,8 @@ const CourseList = () => {
                                     <td>{course.course_name}</td>
                                     <td>
                                         <a href={`/courses/${course.course_id}`} className="btn btn-primary btn-sm">Detail</a>
-                                        <a href={`/courses/update/${course.course_id}`} className="btn btn-primary btn-sm">Update</a>
-                                        <a href={`/courses/delete/${course.course_id}`} className="btn btn-danger btn-sm"
-                                           onClick={() => window.confirm('Are you sure you want to delete this?')}>Delete</a>
+                                        <button onClick={() => handleUpdate(course.course_id)} className="btn btn-primary btn-sm">Update</button>
+                                        <button onClick={() => handleDelete(course.course_id)} className="btn btn-danger btn-sm">Delete</button>
                                     </td>
                                 </tr>
                             ))}
@@ -91,7 +107,7 @@ const CourseList = () => {
                 </form>
                 <nav>
                     <ul className="pagination">
-                        {/* Pagination logic here if using pagination */}
+                        {/* Pagination logic here for future */}
                     </ul>
                 </nav>
             </div>
