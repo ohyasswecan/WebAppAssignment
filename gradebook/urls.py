@@ -1,5 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from rest_framework_simplejwt.views import TokenRefreshView
+
 from gradebook.views import (
     ClassEnrollmentListView, ClassEnrollmentDetailView,
     CourseListView, CourseDetailView,
@@ -15,7 +17,8 @@ from gradebook.views import (
     CreateStudentEnrollmentView, UpdateStudentEnrollmentView, DeleteStudentEnrollmentView,
     RegisterView, UploadExcelView, InsertListView, UpdateUserProfileView,
     BaseReflexView, IndexView, HomeView,
-    CourseViewSet, SemesterViewSet, LecturerViewSet, StudentViewSet, ClassEnrollmentViewSet, StudentEnrollmentViewSet
+    CourseViewSet, SemesterViewSet, LecturerViewSet, StudentViewSet, ClassEnrollmentViewSet, StudentEnrollmentViewSet,
+    MyTokenObtainPairView, UserInfoView
 )
 
 router = DefaultRouter()
@@ -30,6 +33,9 @@ urlpatterns = [
     path('home/', HomeView.as_view(), name='home'),
     path('base/', BaseReflexView.as_view(), name='base'),
     path('api/', include(router.urls)),
+    path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/userinfo/', UserInfoView.as_view(), name='user_info'),
     path('api/student_enrollments/', EnrollmentListView.as_view(), name='student_enrollment-list'),
     path('api/student_enrollments/<int:pk>/', EnrollmentDetailView.as_view(), name='student_enrollment-detail'),
     path('api/upload_excel/', UploadExcelView.as_view(), name='upload_excel'),

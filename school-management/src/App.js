@@ -23,11 +23,13 @@ import UpdateStudent from "./components/UpdateStudent";
 import UpdateLecturer from "./components/UpdateLecturer";
 import UpdateEnrollment from "./components/UpdateEnrollment";
 import UploadExcel from "./components/UploadExcel";
+import LoginForm from "./components/Login";
 
 function App() {
     return (
         <Layout>
             <Routes>
+                  <Route path="/login" element={<LoginForm />} />
                 <Route path="/" element={<Home/>}/>
                 <Route path="/students" element={<StudentList/>}/>
                 <Route path="/students/:studentId" element={<StudentDetail/>}/>

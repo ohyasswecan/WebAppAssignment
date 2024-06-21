@@ -10,6 +10,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, JsonResponse
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 from .models import Class_Enrollment, Course, Semester, Student, Lecturer, Student_Enrollment, UserProfile
 from .forms import Class_EnrollmentForm, CourseForm, SemesterForm, StudentForm, LecturerForm, StudentEnrollmentForm, \
     UploadExcelForm, UserProfileForm, CustomUserCreationForm
@@ -17,6 +19,24 @@ from .serializers import CourseSerializer, SemesterSerializer, LecturerSerialize
     ClassEnrollmentSerializer, StudentEnrollmentSerializer
 import pandas as pd
 import datetime
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    pass
+
+
+class UserInfoView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        user_profile = user.profile  # Assuming OneToOne relationship is set
+        return Response({
+            'username': user.username,
+            'email': user.email,
+            'role': user_profile.role,
+            'avatar': user_profile.avatar.url if user_profile.avatar else None
+        })
 
 
 # Base Reflex View
@@ -406,6 +426,7 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
+
 class InsertListView(APIView):
     parser_classes = [JSONParser]  # Ensure JSON parser is used
 
@@ -434,7 +455,8 @@ class InsertListView(APIView):
                         else:
                             logger.debug(f"Skipped existing student with ID {row['student_id']}")
                     except Exception as e:
-                        logger.error(f"Error inserting data for {row['student_firstname']} {row['student_lastname']}: {e}")
+                        logger.error(
+                            f"Error inserting data for {row['student_firstname']} {row['student_lastname']}: {e}")
 
                 return JsonResponse({'message': 'Data inserted successfully'}, status=201)
             else:
@@ -445,8 +467,9 @@ class InsertListView(APIView):
             return JsonResponse({'message': 'Error processing request'}, status=500)
 
     def get(self, request):
-        return JsonResponse({'message': 'POST request expected'}, status=400)\
-
+        return JsonResponse({'message': 'POST request expected'}, status=400) \
+ \
+ \
 # Update User Profile View
 class UpdateUserProfileView(LoginRequiredMixin, APIView):
     def post(self, request):
